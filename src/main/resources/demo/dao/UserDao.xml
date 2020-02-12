@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="demo.dao.UserDao">
+    <select id="findById" resultType="user">
+        select * from test.t_test where id=#{id}
+    </select>
+    <select id="findByName" parameterType="string" resultType="user">
+        select * from test.t_test where name like #{name}
+    </select>
+    <insert id="insertData" parameterType="user">
+        insert into test.t_test (id , name, sex) values (#{id},#{name},#{sex})
+    </insert>
+    <delete id="deleteData" parameterType="int">
+        delete from test.t_test where id = #{id}
+    </delete>
+    <update id="updateData" parameterType="user">
+        update test.t_test set name = #{name} where id=#{id}
+    </update>
+
+    <select id="findByNameIf" parameterType="user" resultType="user">
+        select * from test.t_Test where 1 = 1
+        <if test ="id != null">
+            and name like #{name}
+        </if>
+    </select>
+
+    <sql id="baseSql">
+        select * from test.t_test
+    </sql>
+    <select id="findByIdForeach" parameterType="user" resultType="user">
+        <include refid="baseSql"></include>
+        <where>
+            <if test="ids!=null">
+                <foreach collection="ids" open=" and id in (" close=")" item="id" separator=",">
+                    #{id}
+                </foreach>
+            </if>
+        </where>
+    </select>
+</mapper>
